@@ -1,42 +1,57 @@
 import { describe, expect, it } from "vitest";
 
-import { CreneauHoraire } from "../../../src/domain/ValueObject/CreneauHoraire";
-import { CreneauRetrait } from "../../../src/domain/Entities/CreneauRetrait";
+import { Utilisateur } from "../../../src/domain/Entities/Utilisateur";
+import { Produit } from "../../../src/domain/Entities/Produit";
 import { Commande, StatutCommande } from "../../../src/domain/Entities/Commande";
 
 describe("Domaine - Commande de repas", () => {
-    const horaireValide = new CreneauHoraire(
-        new Date("2026-11-26T12:00:00Z"),
-        new Date("2026-11-26T12:15:00Z")
+    const utilisateur = new Utilisateur(
+        1,
+        "Lucas",
+        "Rachel",
+        "lulu.rara@gmail.com"
     );
 
+    describe("Produit", () => {
+        it("permet de modifier le prix et refuse un prix invalide", () => {
+            const produit = new Produit(1, "Burger", 650);
+
+            produit.changerPrix(700);
+            expect(produit.prix).toBe(700);
+
+            expect(() => produit.changerPrix(0)).toThrow();
+            expect(() => produit.changerPrix(-50)).toThrow();
+        });
+    });
+
     describe("Commande", () => {
-        it("crée une commande en attente et permet de modifier le prix ou de la marquer prête", () => {
-            const commande = new Commande(1, "Lucas Rachel","Burger", 650);
+        it("crée une commande en attente et permet de la marquer prête", () => {
+            const produit = new Produit(1, "Burger", 650);
+            const commande = new Commande(1, utilisateur.id, produit.id);
+
             expect(commande.statut).toBe(StatutCommande.EN_ATTENTE);
 
-            commande.changerPrix(700);
-            expect(commande.prixCentimes).toBe(700);
-
-            commande.marquerPrete(new Date("2026-11-26T12:05:00Z"));
+            commande.marquerPrete();
             expect(commande.statut).toBe(StatutCommande.PRET);
         });
 
-        it("refuse un identifiant, un nom vide ou un prix invalide", () => {
-            expect(() => new Commande(0, "Titouan Vernagut","Burger",65)).toThrow();
-            expect(() => new Commande(1, "   ","Burger" , 650)).toThrow();
-            expect(() => new Commande(1, "Maria BOUCHENE","Burger",0)).toThrow();
+        it("refuse un identifiant de commande, d'utilisateur ou de produit invalide", () => {
+            const produit = new Produit(1, "Burger", 650);
+
+            expect(() => new Commande(0, utilisateur.id, produit.id)).toThrow();
+            expect(() => new Commande(1, 0, produit.id)).toThrow();
+            expect(() => new Commande(1, utilisateur.id, 0)).toThrow();
         });
 
         it("interdit de marquer prête une commande annulée", () => {
-            const commande = new Commande(2, "Titouan vernagut","Salade", 450);
+            const produit = new Produit(2, "Frites", 450);
+            const commande = new Commande(2, utilisateur.id, produit.id);
+
             commande.annuler();
 
             expect(commande.statut).toBe(StatutCommande.ANNULE);
             expect(commande.peutEtreModifiee()).toBe(false);
-            expect(() =>
-                commande.marquerPrete(new Date("2026-11-26T12:05:00Z"))
-            ).toThrow();
+            expect(() =>commande.marquerPrete().toThrow());
         });
     });
 });

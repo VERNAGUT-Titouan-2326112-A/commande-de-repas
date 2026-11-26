@@ -10,6 +10,9 @@ export class Utilisateur {
         nom: string,
         email: string
     ) {
+        if (!Number.isInteger(id) || id <= 0) {
+            throw new Error("L'identifiant de l'utilisateur doit être un entier positif.");
+        }
         this._id = id;
         this._prenom = prenom.trim();
         this._nom = nom.trim();

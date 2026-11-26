@@ -10,20 +10,29 @@ export class Commande {
     private _id: number;
     private _utilisateurId: number;
     private _produitId: number;
-    private _prixCentimes: number;
     private _statut: StatutCommande;
 
     constructor(
         id: number,
         utilisateurId: number,
         produitId: number,
-        prixCentimes: number,
         statut: StatutCommande = StatutCommande.EN_ATTENTE
     ) {
+        if (!Number.isInteger(id) || id <= 0) {
+            throw new Error("L'identifiant de l'utilisateur doit être un entier positif.");
+        }
+
+        if (!Number.isInteger(utilisateurId) || utilisateurId <= 0) {
+            throw new Error("L'identifiant de l'utilisateur doit être un entier positif.");
+        }
+
+        if (!Number.isInteger(produitId) || produitId <= 0) {
+            throw new Error("L'identifiant du produit doit être un entier positif.");
+        }
+
         this._id = id;
         this._utilisateurId = utilisateurId;
         this._produitId = produitId;
-        this._prixCentimes = prixCentimes;
         this._statut = statut;
     }
 
@@ -37,10 +46,6 @@ export class Commande {
 
     get produitId(): number {
         return this._produitId;
-    }
-
-    get prixCentimes(): number {
-        return this._prixCentimes;
     }
 
     get statut(): StatutCommande {
@@ -63,12 +68,5 @@ export class Commande {
             throw new TransitionStatutCommandeError(this._statut, StatutCommande.ANNULE);
         }
         this._statut = StatutCommande.ANNULE;
-    }
-
-    changerPrix(nouveauPrixCentimes: number): void {
-        if (!Number.isInteger(nouveauPrixCentimes) || nouveauPrixCentimes <= 0) {
-            throw new Error("Le nouveau prix doit être strictement positif en centimes.");
-        }
-        this._prixCentimes = nouveauPrixCentimes;
     }
 }
