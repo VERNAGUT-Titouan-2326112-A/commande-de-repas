@@ -1,0 +1,42 @@
+import { describe, expect, it } from "vitest";
+
+import { CreneauHoraire } from "../../../src/domain/ValueObject/CreneauHoraire";
+import { CreneauRetrait } from "../../../src/domain/Entities/CreneauRetrait";
+import { Commande, StatutCommande } from "../../../src/domain/Entities/Commande";
+
+describe("Domaine - Commande de repas", () => {
+    const horaireValide = new CreneauHoraire(
+        new Date("2026-11-26T12:00:00Z"),
+        new Date("2026-11-26T12:15:00Z")
+    );
+
+    describe("Commande", () => {
+        it("crée une commande en attente et permet de modifier le prix ou de la marquer prête", () => {
+            const commande = new Commande(1, "Lucas Rachel","Burger", 650);
+            expect(commande.statut).toBe(StatutCommande.EN_ATTENTE);
+
+            commande.changerPrix(700);
+            expect(commande.prixCentimes).toBe(700);
+
+            commande.marquerPrete(new Date("2026-11-26T12:05:00Z"));
+            expect(commande.statut).toBe(StatutCommande.PRET);
+        });
+
+        it("refuse un identifiant, un nom vide ou un prix invalide", () => {
+            expect(() => new Commande(0, "Titouan Vernagut","Burger",65)).toThrow();
+            expect(() => new Commande(1, "   ","Burger" , 650)).toThrow();
+            expect(() => new Commande(1, "Maria BOUCHENE","Burger",0)).toThrow();
+        });
+
+        it("interdit de marquer prête une commande annulée", () => {
+            const commande = new Commande(2, "Titouan vernagut","Salade", 450);
+            commande.annuler();
+
+            expect(commande.statut).toBe(StatutCommande.ANNULE);
+            expect(commande.peutEtreModifiee()).toBe(false);
+            expect(() =>
+                commande.marquerPrete(new Date("2026-11-26T12:05:00Z"))
+            ).toThrow();
+        });
+    });
+});
