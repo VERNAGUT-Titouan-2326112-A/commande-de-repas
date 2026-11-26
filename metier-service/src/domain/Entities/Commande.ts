@@ -1,3 +1,5 @@
+import { TransitionStatutCommandeError } from "../Exception/ExceptionList";
+
 export enum StatutCommande {
     EN_ATTENTE = "en attente",
     PRET = "pret",
@@ -62,20 +64,16 @@ export class Commande {
         return this._statut === StatutCommande.EN_ATTENTE;
     }
 
-    marquerPrete(now: Date = new Date()): void {
+    marquerPrete(): void {
         if (this._statut !== StatutCommande.EN_ATTENTE) {
-            throw new Error(
-                `Impossible de marquer la commande ${this.id} comme prête : statut actuel "${this._statut}".`
-            );
+            throw new TransitionStatutCommandeError(this._statut, StatutCommande.PRET);
         }
         this._statut = StatutCommande.PRET;
     }
 
     annuler(): void {
         if (this._statut !== StatutCommande.EN_ATTENTE) {
-            throw new Error(
-                `Impossible d'annuler la commande ${this.id} : statut actuel "${this._statut}".`
-            );
+            throw new TransitionStatutCommandeError(this._statut, StatutCommande.ANNULE);
         }
         this._statut = StatutCommande.ANNULE;
     }
