@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { OuvrirCreneau, ReserverCommande } from "../../src/application/cas-usage";
-import { CreneauIntrouvableError } from "../../src/application/erreurs";
+import { CreneauIntrouvableError } from "../../src/domain/Exception/erreurs";
 import { ErreurDomaine } from "../../src/domain/Exception/ExceptionList";
 import { CreneauRepositoryMemoire } from "../../src/infrastructure/memoire/creneau-repository-memoire";
 import { IdsSequentiels } from "./doublures";
