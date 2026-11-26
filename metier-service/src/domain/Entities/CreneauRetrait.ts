@@ -1,5 +1,5 @@
 import { CreneauHoraire } from "../ValueObject/CreneauHoraire";
-import { CapaciteCreneauDepasseeError, ErreurDomaine } from "../Exception/CapaciteCreneauDepasseException";
+import { CapaciteCreneauDepasseeError, ErreurDomaine } from "../Exception/ExceptionList";
 
 export class CreneauRetrait {
     public readonly id: string;
