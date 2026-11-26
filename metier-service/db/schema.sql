@@ -18,7 +18,7 @@ CREATE TABLE utilisateurs (
 CREATE TABLE produits (
                             id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                             nom           VARCHAR(150) NOT NULL,
-                            prix INTEGER NOT NULL;
+                            prix            INTEGER NOT NULL;
 
 -- 3. Creneaux de retrait
 CREATE TABLE creneaux_retrait (
@@ -32,3 +32,5 @@ CREATE TABLE commandes (
                             utilisateur_id   UUID NOT NULL REFERENCES utilisateurs(id) ON DELETE CASCADE,
                             produit_id       UUID NOT NULL REFERENCES produits(id) ON DELETE CASCADE,
                             statut          statut_commande NOT NULL DEFAULT 'en attente');
+
+COMMIT;
