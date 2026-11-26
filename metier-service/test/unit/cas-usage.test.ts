@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { OuvrirCreneau, ReserverCommande } from "../../src/application/cas-usage";
 import { CreneauIntrouvableError } from "../../src/application/erreurs";
-import { CapaciteCreneauDepasseeError } from "../../src/domain/Exception/CapaciteCreneauDepasseException";
+import { ErreurDomaine } from "../../src/domain/Exception/ExceptionList";
 import { CreneauRepositoryMemoire } from "../../src/infrastructure/memoire/creneau-repository-memoire";
 import { IdsSequentiels } from "./doublures";
 
@@ -41,7 +41,7 @@ describe("ReserverCommande", () => {
         const { repo, ouvrir, reserver } = monter();
         await ouvrir.executer(DEBUT, FIN, 1);
         await reserver.executer("cr-001", "cmd-1");
-        await expect(reserver.executer("cr-001", "cmd-2")).rejects.toThrow(CapaciteCreneauDepasseeError);
+        await expect(reserver.executer("cr-001", "cmd-2")).rejects.toThrow(ErreurDomaine);
         expect((await repo.trouverCreneau("cr-001"))?.commandeIds).toEqual(["cmd-1"]);
     });
 

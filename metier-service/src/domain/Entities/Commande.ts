@@ -3,15 +3,18 @@ export enum StatutCommande {
     PRET = "pret",
     ANNULE = "annulé",
 }
+
 export class Commande {
     private _id: number;
     private _nom: string;
+    private _produit: string;
     private _prixCentimes: number;
     private _statut: StatutCommande;
 
     constructor(
         id: number,
         nom: string,
+        produit: string,
         prixCentimes: number,
         statut: StatutCommande = StatutCommande.EN_ATTENTE
     ) {
@@ -21,12 +24,16 @@ export class Commande {
         if (!nom.trim()) {
             throw new Error("Le nom de la commande est obligatoire.");
         }
+        if (!produit.trim()) {
+            throw new Error("Le produit de la commande est obligatoire.");
+        }
         if (!Number.isInteger(prixCentimes) || prixCentimes <= 0) {
             throw new Error("Le prix de la commande doit être un entier strictement positif en centimes.");
         }
 
         this._id = id;
         this._nom = nom.trim();
+        this._produit = produit.trim();
         this._prixCentimes = prixCentimes;
         this._statut = statut;
     }
@@ -37,6 +44,10 @@ export class Commande {
 
     get nom(): string {
         return this._nom;
+    }
+
+    get produit(): string {
+        return this._produit;
     }
 
     get prixCentimes(): number {
@@ -68,6 +79,19 @@ export class Commande {
         }
         this._statut = StatutCommande.ANNULE;
     }
+
+    changerProduit(nouveauProduit: string): void {
+        if (!this.peutEtreModifiee()) {
+            throw new Error(
+                `Impossible de modifier le produit de la commande ${this.id} : statut actuel "${this._statut}".`
+            );
+        }
+        if (!nouveauProduit.trim()) {
+            throw new Error("Le nouveau produit est obligatoire.");
+        }
+        this._produit = nouveauProduit.trim();
+    }
+
     changerPrix(nouveauPrixCentimes: number): void {
         if (!Number.isInteger(nouveauPrixCentimes) || nouveauPrixCentimes <= 0) {
             throw new Error("Le nouveau prix doit être strictement positif en centimes.");

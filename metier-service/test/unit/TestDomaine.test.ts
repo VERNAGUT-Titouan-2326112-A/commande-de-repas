@@ -39,7 +39,7 @@ describe("Domaine - Commande de repas", () => {
 
     describe("Commande", () => {
         it("crée une commande en attente et permet de modifier le prix ou de la marquer prête", () => {
-            const commande = new Commande(1, "Burger", 650);
+            const commande = new Commande(1, "Lucas Rachel","Burger", 650);
             expect(commande.statut).toBe(StatutCommande.EN_ATTENTE);
 
             commande.changerPrix(700);
@@ -50,13 +50,13 @@ describe("Domaine - Commande de repas", () => {
         });
 
         it("refuse un identifiant, un nom vide ou un prix invalide", () => {
-            expect(() => new Commande(0, "Burger", 650)).toThrow();
-            expect(() => new Commande(1, "   ", 650)).toThrow();
-            expect(() => new Commande(1, "Burger", 0)).toThrow();
+            expect(() => new Commande(0, "Titouan Vernagut","Burger",65)).toThrow();
+            expect(() => new Commande(1, "   ","Burger" , 650)).toThrow();
+            expect(() => new Commande(1, "Maria BOUCHENE","Burger",0)).toThrow();
         });
 
         it("interdit de marquer prête une commande annulée", () => {
-            const commande = new Commande(2, "Salade", 450);
+            const commande = new Commande(2, "Titouan vernagut","Salade", 450);
             commande.annuler();
 
             expect(commande.statut).toBe(StatutCommande.ANNULE);
