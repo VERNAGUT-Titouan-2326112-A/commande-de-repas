@@ -8,33 +8,20 @@ export enum StatutCommande {
 
 export class Commande {
     private _id: number;
-    private _nom: string;
+    private _utilisateurId: number;
     private _produit: string;
     private _prixCentimes: number;
     private _statut: StatutCommande;
 
     constructor(
         id: number,
-        nom: string,
+        utilisateurId: number,
         produit: string,
         prixCentimes: number,
         statut: StatutCommande = StatutCommande.EN_ATTENTE
     ) {
-        if (!Number.isInteger(id) || id <= 0) {
-            throw new Error("L'identifiant de la commande est obligatoire.");
-        }
-        if (!nom.trim()) {
-            throw new Error("Le nom de la commande est obligatoire.");
-        }
-        if (!produit.trim()) {
-            throw new Error("Le produit de la commande est obligatoire.");
-        }
-        if (!Number.isInteger(prixCentimes) || prixCentimes <= 0) {
-            throw new Error("Le prix de la commande doit être un entier strictement positif en centimes.");
-        }
-
         this._id = id;
-        this._nom = nom.trim();
+        this._utilisateurId = utilisateurId;
         this._produit = produit.trim();
         this._prixCentimes = prixCentimes;
         this._statut = statut;
@@ -44,8 +31,8 @@ export class Commande {
         return this._id;
     }
 
-    get nom(): string {
-        return this._nom;
+    get utilisateurId(): number {
+        return this._utilisateurId;
     }
 
     get produit(): string {
