@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { CreneauHoraire } from "../../src/domain/Entities/CreneauHoraire";
+import { CreneauHoraire } from "../../src/domain/ValueObject/CreneauHoraire";
 import { CreneauRetrait } from "../../src/domain/Entities/CreneauRetrait";
 import { Commande, StatutCommande } from "../../src/domain/Entities/Commande";
 
