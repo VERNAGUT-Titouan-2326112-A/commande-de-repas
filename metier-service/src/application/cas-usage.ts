@@ -1,6 +1,6 @@
 import { CreneauRetrait } from "../domain/Entities/CreneauRetrait";
 import { CreneauHoraire } from "../domain/ValueObject/CreneauHoraire";
-import { CreneauIntrouvableError } from "./erreurs";
+import { CreneauIntrouvableError } from "../domain/Exception/erreurs";
 import type { CreneauRepository, GenerateurId } from "./ports";
 
 // Cas d'usage 1 : ouvrir un créneau de retrait (crée la ressource principale).

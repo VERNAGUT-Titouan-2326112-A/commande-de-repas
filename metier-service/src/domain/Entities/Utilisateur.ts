@@ -1,29 +1,38 @@
+import { ChampObligatoireError, EmailInvalideError, IdentifiantInvalideError } from "../Exception/ExceptionList";
+
 export class Utilisateur {
-    private _id: number;
+    private _id: string;
     private _prenom: string;
     private _nom: string;
     private _email: string;
 
-    constructor(
-        id: number,
-        prenom: string,
-        nom: string,
-        email: string
-    ) {
-        if (!Number.isInteger(id) || id <= 0) {
-            throw new Error("L'identifiant de l'utilisateur doit être un entier positif.");
+    constructor(id: string, prenom: string, nom: string, email: string) {
+        if (!id.trim()) {
+            throw new IdentifiantInvalideError("de l'utilisateur");
         }
+        Utilisateur.verifierChamp(prenom, "prénom");
+        Utilisateur.verifierChamp(nom, "nom");
+        Utilisateur.verifierEmail(email);
+
         this._id = id;
         this._prenom = prenom.trim();
         this._nom = nom.trim();
         this._email = email.trim().toLowerCase();
     }
 
-    private static estEmailValide(email: string): boolean {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+    private static verifierChamp(valeur: string, champ: string): void {
+        if (!valeur.trim()) {
+            throw new ChampObligatoireError(champ);
+        }
     }
 
-    get id(): number {
+    private static verifierEmail(email: string): void {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+            throw new EmailInvalideError(email);
+        }
+    }
+
+    get id(): string {
         return this._id;
     }
 
@@ -40,23 +49,17 @@ export class Utilisateur {
     }
 
     changerPrenom(nouveauPrenom: string): void {
-        if (!nouveauPrenom.trim()) {
-            throw new Error("Le prénom de la personne est vide.");
-        }
+        Utilisateur.verifierChamp(nouveauPrenom, "prénom");
         this._prenom = nouveauPrenom.trim();
     }
 
     changerNom(nouveauNom: string): void {
-        if (!nouveauNom.trim()) {
-            throw new Error("Le nom de la personne est vide.");
-        }
+        Utilisateur.verifierChamp(nouveauNom, "nom");
         this._nom = nouveauNom.trim();
     }
 
     changerEmail(nouvelEmail: string): void {
-        if (!Utilisateur.estEmailValide(nouvelEmail)) {
-            throw new Error("L'adresse email est invalide.");
-        }
+        Utilisateur.verifierEmail(nouvelEmail);
         this._email = nouvelEmail.trim().toLowerCase();
     }
 }

@@ -1,13 +1,10 @@
-import type { CreneauRetrait } from "../domain/Entities/CreneauRetrait";
+import type { CreneauRetrait } from "../domain/Entities/CreneauRetrait"; // Importation du type CreneauRetrait depuis le domaine pour l'utiliser dans les interfaces de port.
 
-// Port de sortie : ce dont les cas d'usage ont besoin pour lire et sauver un créneau.
-// Les noms parlent métier ; l'implémentation (mémoire, PostgreSQL...) est dans infrastructure/.
-export interface CreneauRepository {
-    trouverCreneau(id: string): Promise<CreneauRetrait | null>;
-    enregistrerCreneau(creneau: CreneauRetrait): Promise<void>;
+export interface CreneauRepository { // Port d'accès aux créneaux de retrait (interface pour l'infrastructure).
+    trouverCreneau(creneauId: string): Promise<CreneauRetrait | null>;   
+    enregistrerCreneau(creneau: CreneauRetrait): Promise<void>; 
 }
 
-// Port de sortie : fabrique les identifiants des nouveaux créneaux.
-export interface GenerateurId {
-    nouveau(): string;
+export interface GenerateurId { 
+    nouveau(): string; 
 }

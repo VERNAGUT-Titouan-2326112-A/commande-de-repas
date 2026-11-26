@@ -1,5 +1,9 @@
 import { CreneauHoraire } from "../ValueObject/CreneauHoraire";
-import { CapaciteCreneauDepasseeError, ErreurDomaine } from "../Exception/ExceptionList";
+import {
+    CapaciteCreneauDepasseeError,
+    CapaciteInvalideError,
+    IdentifiantInvalideError,
+} from "../Exception/ExceptionList";
 
 export class CreneauRetrait {
     public readonly id: string;
@@ -14,10 +18,10 @@ export class CreneauRetrait {
         commandeIds: string[] = []
     ) {
         if (!id.trim()) {
-            throw new ErreurDomaine("L'identifiant du créneau est obligatoire.");
+            throw new IdentifiantInvalideError("du créneau");
         }
         if (!Number.isInteger(capaciteMax) || capaciteMax <= 0) {
-            throw new ErreurDomaine("La capacité maximale du créneau doit être positive.");
+            throw new CapaciteInvalideError(capaciteMax);
         }
         if (commandeIds.length > capaciteMax) {
             throw new CapaciteCreneauDepasseeError(id, capaciteMax);

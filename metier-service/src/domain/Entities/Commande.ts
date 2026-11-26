@@ -1,4 +1,4 @@
-import { TransitionStatutCommandeError } from "../Exception/ExceptionList";
+import { IdentifiantInvalideError, TransitionStatutCommandeError } from "../Exception/ExceptionList";
 
 export enum StatutCommande {
     EN_ATTENTE = "en attente",
@@ -7,45 +7,53 @@ export enum StatutCommande {
 }
 
 export class Commande {
-    private _id: number;
-    private _utilisateurId: number;
-    private _produitId: number;
+    private _id: string;
+    private _utilisateurId: string;
+    private _produitId: string;
+    private _creneauId: string;
     private _statut: StatutCommande;
 
     constructor(
-        id: number,
-        utilisateurId: number,
-        produitId: number,
+        id: string,
+        utilisateurId: string,
+        produitId: string,
+        creneauId: string,
         statut: StatutCommande = StatutCommande.EN_ATTENTE
     ) {
-        if (!Number.isInteger(id) || id <= 0) {
-            throw new Error("L'identifiant de l'utilisateur doit être un entier positif.");
+        if (!id.trim()) {
+            throw new IdentifiantInvalideError("de la commande");
         }
-
-        if (!Number.isInteger(utilisateurId) || utilisateurId <= 0) {
-            throw new Error("L'identifiant de l'utilisateur doit être un entier positif.");
+        if (!utilisateurId.trim()) {
+            throw new IdentifiantInvalideError("de l'utilisateur");
         }
-
-        if (!Number.isInteger(produitId) || produitId <= 0) {
-            throw new Error("L'identifiant du produit doit être un entier positif.");
+        if (!produitId.trim()) {
+            throw new IdentifiantInvalideError("du produit");
+        }
+        if (!creneauId.trim()) {
+            throw new IdentifiantInvalideError("du créneau");
         }
 
         this._id = id;
         this._utilisateurId = utilisateurId;
         this._produitId = produitId;
+        this._creneauId = creneauId;
         this._statut = statut;
     }
 
-    get id(): number {
+    get id(): string {
         return this._id;
     }
 
-    get utilisateurId(): number {
+    get utilisateurId(): string {
         return this._utilisateurId;
     }
 
-    get produitId(): number {
+    get produitId(): string {
         return this._produitId;
+    }
+
+    get creneauId(): string {
+        return this._creneauId;
     }
 
     get statut(): StatutCommande {

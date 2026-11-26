@@ -1,22 +1,35 @@
+import { ChampObligatoireError, IdentifiantInvalideError, PrixInvalideError } from "../Exception/ExceptionList";
+
 export class Produit {
-    private _id: number;
+    private _id: string;
     private _produitNom: string;
     private _prix: number;
 
-    constructor(
-        id: number,
-        produitNom: string,
-        prix: number
-    ) {
-        if (!Number.isInteger(id) || id <= 0) {
-            throw new Error("L'identifiant de l'utilisateur doit être un entier positif.");
+    constructor(id: string, produitNom: string, prix: number) {
+        if (!id.trim()) {
+            throw new IdentifiantInvalideError("du produit");
         }
+        Produit.verifierNom(produitNom);
+        Produit.verifierPrix(prix);
+
         this._id = id;
         this._produitNom = produitNom.trim();
         this._prix = prix;
     }
 
-    get id(): number {
+    private static verifierNom(nom: string): void {
+        if (!nom.trim()) {
+            throw new ChampObligatoireError("nom du produit");
+        }
+    }
+
+    private static verifierPrix(prix: number): void {
+        if (!Number.isInteger(prix) || prix <= 0) {
+            throw new PrixInvalideError(prix);
+        }
+    }
+
+    get id(): string {
         return this._id;
     }
 
@@ -24,24 +37,17 @@ export class Produit {
         return this._produitNom;
     }
 
-    set produitNom(value: string) {
-        this._produitNom = value;
-    }
-
     get prix(): number {
         return this._prix;
     }
 
     changerPrix(nouveauPrixCentimes: number): void {
-        if (!Number.isInteger(nouveauPrixCentimes) || nouveauPrixCentimes <= 0) {
-            throw new Error("Le nouveau prix doit être strictement positif en centimes.");
-        }
+        Produit.verifierPrix(nouveauPrixCentimes);
         this._prix = nouveauPrixCentimes;
     }
+
     changerProduit(nouveauProduit: string): void {
-        if (!nouveauProduit.trim()) {
-            throw new Error("Le nouveau produit est obligatoire.");
-        }
+        Produit.verifierNom(nouveauProduit);
         this._produitNom = nouveauProduit.trim();
     }
 }
